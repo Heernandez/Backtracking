@@ -283,7 +283,8 @@ def dividir_trabajo(tablero,sink):
             dic["n"] = k
             dic["x"] = x
             dic["y"] = y
-            print("division ",dic)
+            print("division ")
+            mostrar_tablero(dic["tablero"])
             sink.send_json(dic)
            
 def filtrar(mitablero,sink):
@@ -303,7 +304,7 @@ def filtrar(mitablero,sink):
         mostrar_tablero(mitablero)
         dic = {}
         dic["tablero"] = ct
-        dic["n"] = None
+        dic["n"] = 100
         dic["x"] = None
         dic["y"] = None
         sink.send_json(dic)
@@ -321,7 +322,7 @@ def poner_numero(tablero,n,x,y,sink):
     # si el numero se puede poner intenta un filtrado y mas adelante crear nuevas
     #ramas, de lo contrario la rama actual es una hoja del arbol sin solucion y no se hace nada mas
     if validar_marcado(tablero,x,y):
-        filtrar(tablero)
+        filtrar(tablero,sink)
     else:
         pass
 

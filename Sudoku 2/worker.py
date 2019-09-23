@@ -19,11 +19,8 @@ while True:
     s = w.recv_json()
     
     if s["n"] == None:
-        print("recibo")
         tablero = s["tablero"]
-        print("tipo es ",type(tablero))
-        mostrar_tablero(tablero)
-       
+        
         filtrar(tablero,sink)
     else:
         tablero = s["tablero"] 

@@ -10,15 +10,21 @@ respuesta = context.socket(zmq.PULL)
 respuesta.bind("tcp://*:6000")
 
 # Socket para enviar nuevo trabajo al fan
-fan = context.socket(zmq.PUSH)
+fan = context.socket(zmq.REQ)
 fan.connect("tcp://localhost:7000")
 
-y = respuesta.recv()
+#y = respuesta.recv()
 
 # Recibir resultados
+i = 1
 while True:
     s = respuesta.recv_json()
-    print(s)
-    #fan.send_json(s)
+    if s["n"] == 100:
+        print(s["tablero"])
+        break
+    print("rama",i)
+    i+=1
+    fan.send_json(s)
+    m = fan.recv()
     
     
