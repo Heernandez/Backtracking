@@ -20,7 +20,6 @@ while True:
     
     if s["n"] == None:
         tablero = s["tablero"]
-        
         filtrar(tablero,sink)
     else:
         tablero = s["tablero"] 

@@ -303,7 +303,7 @@ def filtrar(mitablero,sink):
         print("Encontro solucion")
         mostrar_tablero(mitablero)
         dic = {}
-        dic["tablero"] = ct
+        dic["tablero"] = mitablero
         dic["n"] = 100
         dic["x"] = None
         dic["y"] = None

@@ -10,18 +10,13 @@ context = zmq.Context()
 workers = context.socket(zmq.PUSH)
 workers.bind("tcp://*:5000")
 
-# Socket para confirmar conexion con el sink
-sink = context.socket(zmq.PUSH)
-sink.connect("tcp://localhost:6000")
-
 # Socket para recibir trabajo desde el sink para ser distribuido
-newWork = context.socket(zmq.REP)
-newWork.bind("tcp://*:7000")
+newWork = context.socket(zmq.PULL)
+newWork.connect("tcp://localhost:7000")
 
 print("Press enter when workers are ready ...")
 _ = input()
 
-#sink.send(b'0')
 
 pila = Pila()
 tablero = [
@@ -45,23 +40,16 @@ dic = { "tablero" : tablero,
         }
 pila.agregar(dic)
 
-poller = zmq.Poller()
-poller.register(newWork, zmq.POLLIN)
 while True:
-    try:
-        socks = dict(poller.poll())
-    except KeyboardInterrupt:
-        break
-
-    if newWork in socks:
-        m = newWork.recv_json()
-        pila.agregar(m)
-        newWork.send(b'0')
+        
                 
     if not pila.vacia():
         workers.send_json(pila.sacar())
     else:
         print("no hay")
+    
+    m = newWork.recv_json()
+    pila.agregar(m)
     
    
         
