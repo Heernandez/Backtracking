@@ -265,6 +265,17 @@ def llenar_posibles(tablero):
     #mostrar_tablero(posibles)
     return posibles
 
+
+def verificar_posibles(posibles):
+    for i in posibles:
+        for j in i:
+            n = j
+            if isinstance(n,list):
+                if len(n) == 0:
+                    return False
+    
+    return True
+
 def dividir_trabajo(tablero,sink):
     
     posibles = llenar_posibles(tablero)
@@ -298,20 +309,23 @@ def filtrar(mitablero,sink):
         else:
             #el filtrado ya no encuentra mas opciones, hay que pasar a la siguiente fase
             var = False
-    
-    if verificar_completo(mitablero):
-        print("Encontro solucion")
-        mostrar_tablero(mitablero)
-        dic = {}
-        dic["tablero"] = mitablero
-        dic["n"] = 100
-        dic["x"] = None
-        dic["y"] = None
-        sink.send_json(dic)
+    if verificar_posibles(llenar_posibles(mitablero)):
+       
+        if verificar_completo(mitablero):
+            print("Encontro solucion")
+            mostrar_tablero(mitablero)
+            dic = {}
+            dic["tablero"] = mitablero
+            dic["n"] = 100
+            dic["x"] = None
+            dic["y"] = None
+            sink.send_json(dic)
 
+        else:
+        # Si el filtrado no hallo la solucion, se hacen ramificaciones
+            resp = dividir_trabajo(mitablero,sink)
     else:
-       # Si el filtrado no hallo la solucion, se hacen ramificaciones
-        resp = dividir_trabajo(mitablero,sink)
+        pass
 
 def poner_numero(tablero,n,x,y,sink):
     posibles = llenar_posibles(tablero)
