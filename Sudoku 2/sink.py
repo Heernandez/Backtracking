@@ -16,7 +16,9 @@ fan.connect("tcp://localhost:7000")
 y = respuesta.recv()
 
 # Recibir resultados
-s = respuesta.recv_json()
-fan.send_json(s)
+while True:
+    s = respuesta.recv_json()
+    print(s)
+    #fan.send_json(s)
     
     

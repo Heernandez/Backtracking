@@ -1,9 +1,4 @@
-#contexto para la creacion de sockets
-context = zmq.Context()
-
-# Socket para enviar mas trabajo generado al sink
-sink = context.socket(zmq.PUSH)
-sink.connect("tcp://localhost:6000")
+from copy import deepcopy
 
 def esqueleto():
     posibles = [
@@ -270,7 +265,7 @@ def llenar_posibles(tablero):
     #mostrar_tablero(posibles)
     return posibles
 
-def dividir_trabajo(tablero):
+def dividir_trabajo(tablero,sink):
     
     posibles = llenar_posibles(tablero)
     #Busco un espacio con pocas opciones de marcado
@@ -291,7 +286,7 @@ def dividir_trabajo(tablero):
             print("division ",dic)
             sink.send_json(dic)
            
-def filtrar(mitablero):
+def filtrar(mitablero,sink):
     
     var = True
     while var:
@@ -304,7 +299,6 @@ def filtrar(mitablero):
             var = False
     
     if verificar_completo(mitablero):
-        # Si encontro solucion la envia
         print("Encontro solucion")
         mostrar_tablero(mitablero)
         dic = {}
@@ -313,12 +307,12 @@ def filtrar(mitablero):
         dic["x"] = None
         dic["y"] = None
         sink.send_json(dic)
-        
+
     else:
-        # Si el filtrado no hallo la solucion, se hacen ramificaciones
-        resp = dividir_trabajo(mitablero)
-        
-def poner_numero(tablero,n,x,y):
+       # Si el filtrado no hallo la solucion, se hacen ramificaciones
+        resp = dividir_trabajo(mitablero,sink)
+
+def poner_numero(tablero,n,x,y,sink):
     posibles = llenar_posibles(tablero)
 
     # intenta poner el numero que le envie

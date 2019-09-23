@@ -49,21 +49,17 @@ dic = { "tablero" : tablero,
         "prof" : 0
         }
 
+pila.agregar(dic)
     
-poller = zmq.Poller()
-poller.register(newWork, zmq.POLLIN)
-poller.register(sink, zmq.POLLIN)
-
-workers.send_json(dic)
-
 while True:
 
     #falta la parte de el dic del poller para recibir del socket newwork 
     # y lo que se reciba se agrega a la pila    
-    resp = newWork.recv_json()
-
-    print(resp)
-
-     
+    if not pila.vacia():
+        workers.send_json(pila.sacar())
+    else:
+        print("no hay")
+        
+             
     
 
